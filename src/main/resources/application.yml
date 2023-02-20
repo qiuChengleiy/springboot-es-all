@@ -1,0 +1,11 @@
+server:
+  port: 9000
+
+
+elasticsearch:
+  host: 0.0.0.0
+  port: 9200
+  username:
+  password:
+
+
