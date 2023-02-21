@@ -1,10 +1,21 @@
 package com.es.all.api;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.es.all.EsStudyApplication;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.admin.indices.alias.Alias;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
+import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +54,74 @@ public class IndexApi {
     /**
      * 创建索引
      */
-    //@Test
+    @Test
     public void createIndex() throws IOException {
+        CreateIndexRequest request = new CreateIndexRequest(index);
 
-        // log.info("创建索引 ===> "+ JSONObject.toJSONString(response));
+        // index settings
+        request.settings(
+                Settings.builder()
+                        .put("index.number_of_shards", 3)
+                        .put("index.number_of_replicas", 2)
+        );
+
+        // alias
+        request.alias(new Alias("study_alias"));
+
+        // index mappings
+//        {
+//            "mapping": {
+//            "_doc": {
+//                "properties": {
+//                    "name": {
+//                        "type": "text"
+//                    }
+//                }
+//            }
+//        }
+//        }
+        XContentBuilder builder = XContentFactory.jsonBuilder();
+        builder.startObject();
+        {
+            builder.startObject("properties");
+            {
+                builder.startObject("name");
+                {
+                    builder.field("type", "text");
+                }
+                builder.endObject();
+            }
+            builder.endObject();
+        }
+        builder.endObject();
+        request.mapping(builder);
+
+        // 请求设置
+        request.setTimeout(TimeValue.timeValueMinutes(1));
+
+        CreateIndexResponse createIndexResponse = client.indices().create(request, RequestOptions.DEFAULT);
+        log.info("创建索引 ===> "+ JSONObject.toJSONString(createIndexResponse)); // 创建索引 ===> {"acknowledged":true,"fragment":false,"shardsAcknowledged":true}
     }
 
-    // @Test
-    public void searchIndex() throws IOException {
+    /**
+     * 判断索引是否存在
+     * @throws IOException
+     */
+    @Test
+    public void existIndex() throws IOException {
+        GetIndexRequest request = new GetIndexRequest(index);
+        boolean exists = client.indices().exists(request, RequestOptions.DEFAULT);
+        log.info("索引{}存在 ===> {}", index, exists);
+    }
 
-        //  log.info("查询索引 ===> {}", indexResponse);
+    /**
+     * 删除索引
+     * @throws IOException
+     */
+    @Test
+    public void delIndex() throws IOException {
+        DeleteIndexRequest request = new DeleteIndexRequest(index);
+        AcknowledgedResponse delete = client.indices().delete(request, RequestOptions.DEFAULT);
+        log.info("删除索引 ===> {}", JSONObject.toJSONString(delete)); // 删除索引 ===> {"acknowledged":true,"fragment":false}
     }
 }
