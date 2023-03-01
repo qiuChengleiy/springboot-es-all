@@ -77,7 +77,18 @@
 - [SpringCloud整合 Oauth2+Gateway+Jwt+Nacos 实现授权码模式的服务认证(二)](https://mp.weixin.qq.com/s/dlX1pXIT19nJWN6pvH3tgw)
 
 
+### 关于我
 
+欢迎关注公众号， 获取教程笔记 ~
+
+![](https://www.qiuchenglei.top/img/wx.jpg)
+
+一起进步 欢迎来撩 (￣▽￣)~
+
+
+### 始终相信
+
+敢于尝试的你 其实已经进步了
 
 
 
