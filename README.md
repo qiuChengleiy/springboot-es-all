@@ -15,6 +15,7 @@
 - [一起来学ElasticSearch(十)](https://mp.weixin.qq.com/s/rCIoJkVpqcJpDJ0molBaGw)
 
 - [一起来学ElasticSearch之整合SpringBoot(一)](https://mp.weixin.qq.com/s/Y1wiGPam81iD26KCu2bWKw)
+- [一起来学ElasticSearch之整合SpringBoot(二)](https://mp.weixin.qq.com/s/gJ4ueNKr0RqYVe7541gbGA)
 
 
 ## 往期并发编程内容推荐
